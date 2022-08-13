@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,16 +23,20 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator.Builder;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.demo.player.models.UserSpDetail;
+import com.demo.player.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
 	Logger log = LogManager.getLogger(CustomAuthenticationFilter.class);
 	private final AuthenticationManager authenticationManager;
 	
@@ -55,7 +61,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authentication) throws IOException, ServletException {
 		log.info("login was very succesful");
-		User user = (User) authentication.getPrincipal();
+		UserSpDetail user = (UserSpDetail) authentication.getPrincipal();
+		log.info("user authorities: " + user.getAuthorities().toString());
 		String secretKey = "weeeeeeeeeefwonewefwfqfwwww,,,,....,ww5151w34534gw{{{{wwwwwwwwwwwfwjoefwefwfiwwwwwwwwwwwwwwwwofewefwefwoffffffffffqweqrlyemzndfs";
 		Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
 		
@@ -75,6 +82,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		Map<String,String> tokens = new HashMap<>();
 		tokens.put("accessToken", accessToken);
 		tokens.put("refreshToken", refreshToken);
+		tokens.put("userid",  user.getUserid() + "");
+		
 		response.setContentType("application/json");
 		log.info("new JWT token:" + tokens.toString());
 		new ObjectMapper().writeValue(response.getOutputStream(), tokens);

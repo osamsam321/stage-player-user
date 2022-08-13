@@ -49,7 +49,10 @@ public class Role {
 	public RoleType getRoleType() {
 		return roleType;
 	}
-
+	public String getRoleTypeName()
+	{
+		return roleType.name();
+	}
 	public void setRoleType(RoleType roleType) {
 		this.roleType = roleType;
 	}

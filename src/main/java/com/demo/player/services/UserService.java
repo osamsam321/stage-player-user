@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.emums.RoleType;
 import com.demo.player.models.Role;
-import com.demo.player.models.User;
+import com.demo.player.models.UserSp;
+import com.demo.player.models.UserSpDetail;
 import com.demo.player.repo.RoleRepo;
 import com.demo.player.repo.UserRepo;
 @Service
@@ -32,7 +33,7 @@ RoleRepo roleRepo;
 @Autowired
 private  PasswordEncoder passwordEncoder;
 Logger log = LogManager.getLogger(UserService.class);
-	public User saveUser(User user)
+	public UserSp saveUser(UserSp user)
 	{
 		if(userExists(user.getUsername()))
 		{
@@ -44,8 +45,8 @@ Logger log = LogManager.getLogger(UserService.class);
 		}
 		else
 		{
-			log.info("save user with name {} to database", user.getUserName());
-			user.setPassWord(passwordEncoder.encode(user.getPassWord()));
+			log.info("save user with name {} to database", user.getUsername());
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			userRepo.save(user);
 		}
 		
@@ -59,42 +60,54 @@ Logger log = LogManager.getLogger(UserService.class);
 	{
 		return userRepo.findByEmail(email).isPresent();
 	}
-	public User getUser(UUID id)
+	public UserSp getUser(Long id)
 	{
 		return userRepo.getById(id);
 		
 	}
-	public List<User> getAllUsers()
+	public Optional<UserSp> getUser(String name)
+	{
+		return userRepo.findByUserName(name);
+	}
+	public List<UserSp> getAllUsers()
 	{
 		return userRepo.findAll();
 	}
-	public List<User> saveUsers()
+	public List<UserSp> saveUsers()
 	{
 		return userRepo.findAll();
 	}
 	public void addRoleToUser(String username, RoleType roleType )
 	{
-		User user = userRepo.findByUserName(username).get();
+		UserSp user = userRepo.findByUserName(username).get();
 		Role role = roleRepo.findByRoleName(roleType.name()).get();
 		user.getRoles().add(role);
 	}
-	public User updateUser(UUID uuid)
+	public UserSp updateUser(Long uuid)
 	{
 		return userRepo.findUserById(uuid).get();
 				/*.orElseThrow(() -> new UserNotFoundException("User ID: " + " was not found")); */
 	}
-	public void deleteUser(UUID id)
+	public void deleteUser(Long id)
 	{
 		 userRepo.deleteById(id);
 	}
 	
-	public Optional<User> findByUsername(String username)
+	public Optional<UserSp> findByUsername(String username)
 	{
 		return userRepo.findByUserName(username);
 	}
+	public Optional<Long> findIdByUsername(String username)
+	{
+		return userRepo.findIdByUsername(username);
+	}
+	public Optional<UserSp> findUserSpByUserId(Long userid)
+	{
+		return userRepo.findUserSpByUserId(userid);
+	}
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> userFromDB = findByUsername(username);
+		Optional<UserSp> userFromDB = findByUsername(username);
 		
 		if(userFromDB.isEmpty())
 		{
@@ -105,13 +118,18 @@ Logger log = LogManager.getLogger(UserService.class);
 		else
 		{
 			log.info("user was found in the database");
-			User user = userFromDB.get();
+			UserSp user = userFromDB.get();
 			Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 			user.getRoles().forEach(role -> authorities.add(
 					new SimpleGrantedAuthority(role.getRoleType().name())));
 			
-			return new org.springframework.security.core.userdetails.User(user.getUserName(), 
-					user.getPassWord(), authorities);
+			
+//			return new org.springframework.security.core.userdetails.User(user.getUsername(), 
+//					user.getPassword(), authorities);
+			
+			return new UserSpDetail(user.getUsername(), user.getPassword(), user.getId(), authorities); 
+				
+	
 		}
 		
 	}

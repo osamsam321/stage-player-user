@@ -6,13 +6,17 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.demo.player.models.User;
+import com.demo.player.models.UserSp;
 
-public interface UserRepo extends JpaRepository<User, UUID> {
-	Optional<User> findUserById(UUID uuid);
+public interface UserRepo extends JpaRepository<UserSp, Long> {
+	Optional<UserSp> findUserById(Long uuid);
 	@Query(value="SELECT * FROM user WHERE username = :username", nativeQuery = true)
-	Optional<User> findByUserName(String username);
+	Optional<UserSp> findByUserName(String username);
 	@Query(value="SELECT * FROM user WHERE email = :email", nativeQuery = true)
-	Optional<User> findByEmail(String email);
+	Optional<UserSp> findByEmail(String email);
+	@Query(value="SELECT id from USER WHERE username = :username", nativeQuery = true)
+	Optional<Long> findIdByUsername(String username);
+	@Query(value="SELECT * FROM user WHERE id = :userid", nativeQuery = true)
+	Optional<UserSp> findUserSpByUserId(Long userid);
 	
 }	

@@ -19,7 +19,7 @@ public class RoleService {
 	{
 		return repo.save(role);
 	}
-	public Role getRole(UUID id)
+	public Role getRole(Long id)
 	{
 		return repo.getById(id);		
 	}
@@ -35,13 +35,13 @@ public class RoleService {
 	{
 		 repo.save(role);
 	}
-	public Role updateRole(UUID uuid)
+	public Role updateRole(Long uuid)
 	{
 		return null;
 //		return repo.findRoleById(uuid)
 //				.orElseThrow(() -> new RoleNotFoundException("Role ID: " + " was not found"));
 	}
-	public void deleteRole(UUID id)
+	public void deleteRole(Long id)
 	{
 		 repo.deleteById(id);
 	}

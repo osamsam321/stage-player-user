@@ -37,8 +37,8 @@ Logger log =LogManager.getLogger(CustomAuthorizationFilter.class);
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String loginPath = "/login";
-		if(request.getServletPath().equals(loginPath))
+		String loginPath = "/api/login";
+		if(request.getServletPath().equals(loginPath) || request.getServletPath().equals("/api/token/refresh"))
 		{
 			log.debug("Enter login page");
 			filterChain.doFilter(request, response);
@@ -46,10 +46,11 @@ Logger log =LogManager.getLogger(CustomAuthorizationFilter.class);
 		else
 		{
 			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-			
+			log.info("inside of do filter internal first method");
 			if(authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
 			{
 				try {
+					log.info("inside of do filter internal try method");
 					String token = authorizationHeader.substring("Bearer ".length());
 					String secretKey = "weeeeeeeeeefwonewefwfqfwwww,,,,....,ww5151w34534gw{{{{wwwwwwwwwwwfwjoefwefwfiwwwwwwwwwwwwwwwwofewefwefwoffffffffffqweqrlyemzndfs";
 					Algorithm algo =  Algorithm.HMAC256(secretKey.getBytes());

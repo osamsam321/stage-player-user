@@ -23,11 +23,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.demo.emums.RoleType;
 @Entity(name = "user")
 @Table
-public class User  {
+public class UserSp   {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", columnDefinition = "BINARY(16)")
-	private UUID id;
+	@Column(name = "id" )
+	private Long id;
 	@NotNull
 	private String username;
 	@NotNull
@@ -43,15 +43,14 @@ public class User  {
 	private String phoneNum;
 	@NotNull
 	private String address;
-	private boolean accountLocked;
-	private boolean accoutEnabled;
+
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List <Role> roles;
 	
-	public User(){}
+	public UserSp(){}
 	
-	public User(UUID id, String username, String password, String firstName, String lastName, String email, String phoneNum,
+	public UserSp(Long id, String username, String password, String firstName, String lastName, String email, String phoneNum,
 			String address, List<Role> roles) {
 		super();
 		this.id = id;
@@ -65,10 +64,10 @@ public class User  {
 		this.roles = roles;
 	}
 
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getFirstName() {
@@ -118,11 +117,11 @@ public class User  {
 		this.username = userName;
 	}
 
-	public String getPassWord() {
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassWord(String passWord) {
+	public void setPassword(String passWord) {
 		this.password = passWord;
 	}
 	
@@ -135,30 +134,10 @@ public class User  {
 		this.username = username;
 	}
 
-	public String getPassword() {
-		return password;
-	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	
-	public boolean isAccountLocked() {
-		return accountLocked;
-	}
 
-	public void setAccountLocked(boolean accountLocked) {
-		this.accountLocked = accountLocked;
-	}
-
-	public boolean isAccoutEnabled() {
-		return accoutEnabled;
-	}
-
-	public void setAccoutEnabled(boolean accoutEnabled) {
-		this.accoutEnabled = accoutEnabled;
-	}
 
 	@Override
 	public String toString() {
