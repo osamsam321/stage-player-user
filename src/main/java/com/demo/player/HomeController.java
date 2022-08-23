@@ -82,7 +82,8 @@ public class HomeController {
 		String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 		
 		if(authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
-		{
+		{  
+			
 			try {
 				String refresh_token = authorizationHeader.substring("Bearer ".length());
 				String secretKey = "weeeeeeeeeefwonewefwfqfwwww,,,,....,ww5151w34534gw{{{{wwwwwwwwwwwfwjoefwefwfiwwwwwwwwwwwwwwwwofewefwefwoffffffffffqweqrlyemzndfs";
