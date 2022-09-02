@@ -26,7 +26,7 @@ import com.demo.emums.RoleType;
 public class UserSp   {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id" )
+	@Column(name = "user_id" )
 	private Long id;
 	@NotNull
 	private String username;
